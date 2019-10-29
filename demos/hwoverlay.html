@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>Hardware Overlay Demo</title>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.querySelector('canvas');
+    const gl = canvas.getContext('webgl', {desynchronized: true});
+    canvas.width = 300 * devicePixelRatio;
+    canvas.height = 150 * devicePixelRatio;
+
+    gl.clearColor(1, 1, 1, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.scissor(150, 75, 300, 150);
+    gl.enable(gl.SCISSOR_TEST);
+
+    let hue = 0;
+    const raf = () => {
+      hue += 1;
+      r = Math.sin(0.05 * hue + 0) * 127 + 128;
+      g = Math.sin(0.05 * hue + 2) * 127 + 128;
+      b = Math.sin(0.05 * hue + 4) * 127 + 128;
+      gl.clearColor(r / 255, g / 255, b / 255, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.flush();
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+
+    const setSizeAndRotation = () => {
+      const angle = screen.orientation.angle;
+      canvas.style.transform = `rotateZ(${angle}deg)`;
+      if (angle % 180 == 90) {
+        canvas.style.width = '150px';
+        canvas.style.height = '300px';
+        canvas.style.left = '75px';
+        canvas.style.top = '-75px';
+        canvas.width = 150 * devicePixelRatio;
+        canvas.height = 300 * devicePixelRatio;
+      } else {
+        canvas.style.width = '300px';
+        canvas.style.height = '150px';
+        canvas.style.left = '0px';
+        canvas.style.top = '0px';
+        canvas.width = 300 * devicePixelRatio;
+        canvas.height = 150 * devicePixelRatio;
+      }
+      gl.disable(gl.SCISSOR_TEST);
+      gl.clearColor(1, 1, 1, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.flush();
+      angle % 180 == 90 ? gl.scissor(75, 150, 150, 300)
+                        : gl.scissor(150, 75, 300, 150);
+      gl.enable(gl.SCISSOR_TEST);
+    };
+    screen.orientation.addEventListener('change', setSizeAndRotation);
+    setSizeAndRotation();
+  });
+</script>
+<style>
+  .container {
+    padding: 25px;
+    position: relative;
+  }
+  canvas {
+    position: absolute;
+    width: 300px;
+    height: 150px;
+    left: 0px;
+    top: 0px;
+  }
+</style>
+<div class="container">
+  <canvas></canvas>
+</div>
