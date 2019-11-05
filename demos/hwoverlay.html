@@ -6,12 +6,12 @@
   window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
     const gl = canvas.getContext('webgl', {desynchronized: true, alpha: false});
-    canvas.width = 300 * devicePixelRatio;
-    canvas.height = 150 * devicePixelRatio;
+    canvas.width = 500;
+    canvas.height = 250;
 
     gl.clearColor(1, 1, 1, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.scissor(150, 75, 300, 150);
+    gl.scissor(125, 63, 250, 125);
     gl.enable(gl.SCISSOR_TEST);
 
     let hue = 0;
@@ -28,29 +28,33 @@
     requestAnimationFrame(raf);
 
     const setSizeAndRotation = () => {
-      const angle = screen.orientation.angle;
-      canvas.style.transform = `rotateZ(${angle}deg)`;
+      const angle = screen.orientation.angle % 360;
+      canvas.style.transform = `rotateZ(${angle}deg) scaleY(-1)`;
+      const dpr = devicePixelRatio;
+      canvas.style.border = `${1 / dpr}px solid black`;
       if (angle % 180 == 90) {
-        canvas.style.width = '150px';
-        canvas.style.height = '300px';
-        canvas.style.left = '75px';
-        canvas.style.top = '-75px';
-        canvas.width = 150 * devicePixelRatio;
-        canvas.height = 300 * devicePixelRatio;
+        const [width, height] = [250 / dpr, 500 / dpr];
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        const offset = (height - width) / 2;
+        canvas.style.left = `${offset}px`;
+        canvas.style.top = `-${offset}px`;
+        canvas.width = 250;
+        canvas.height = 500;
       } else {
-        canvas.style.width = '300px';
-        canvas.style.height = '150px';
+        canvas.style.width = `${500 / dpr}px`;
+        canvas.style.height = `${250 / dpr}px`;
         canvas.style.left = '0px';
         canvas.style.top = '0px';
-        canvas.width = 300 * devicePixelRatio;
-        canvas.height = 150 * devicePixelRatio;
+        canvas.width = 500;
+        canvas.height = 250;
       }
       gl.disable(gl.SCISSOR_TEST);
       gl.clearColor(1, 1, 1, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.flush();
-      angle % 180 == 90 ? gl.scissor(75, 150, 150, 300)
-                        : gl.scissor(150, 75, 300, 150);
+      angle % 180 == 90 ? gl.scissor(63, 125, 125, 250)
+                        : gl.scissor(125, 63, 250, 125);
       gl.enable(gl.SCISSOR_TEST);
     };
     screen.orientation.addEventListener('change', setSizeAndRotation);
@@ -65,8 +69,8 @@
   canvas {
     border: 1px solid black;
     position: absolute;
-    width: 300px;
-    height: 150px;
+    width: 302px;
+    height: 152px;
     left: 0px;
     top: 0px;
   }
