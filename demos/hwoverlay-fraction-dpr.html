@@ -5,7 +5,7 @@
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
-    const gl = canvas.getContext('webgl', {desynchronized: true});
+    const gl = canvas.getContext('webgl', {desynchronized: true, alpha: false});
     canvas.width = 500;
     canvas.height = 250;
 
