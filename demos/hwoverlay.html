@@ -29,7 +29,7 @@
 
     const setSizeAndRotation = () => {
       const angle = screen.orientation.angle % 360;
-      canvas.style.transform = `rotateZ(${angle}deg) scaleY(-1)`;
+      canvas.style.transform = `rotateZ(${angle}deg)`;
       const dpr = devicePixelRatio;
       canvas.style.border = `${1 / dpr}px solid black`;
       if (angle % 180 == 90) {
